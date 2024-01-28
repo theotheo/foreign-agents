@@ -2,6 +2,10 @@
 import sys
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
+
+sns.set(style="whitegrid")
+sns.set(font_scale=1.0)
 
 csv_file = sys.argv[1]
 
@@ -26,6 +30,7 @@ monthly_counts_exclusion = monthly_counts_exclusion.reindex(full_range, fill_val
 # Строим барчарт
 plt.figure(figsize=(12, 6))
 bar_chart = monthly_counts.plot(kind='bar', color='skyblue', label='Включение', fontsize=6)
+
 # bar_chart.set_xlabel('Год-Месяц', fontsize=8)
 bar_chart.set_ylabel('Количество записей')
 bar_chart.set_title('Распределение по году-месяцу включения и исключения из реестра')
@@ -46,6 +51,8 @@ for year in monthly_counts.index.year.unique()[1:]:
     plt.text(bar_chart.get_xticks()[full_range.get_loc(loc)], -1, str(year), color='red', ha='center', va='center', rotation=0, fontsize=10)
 
 
-plt.legend()
 
+plt.legend()
+plt.tight_layout()
 plt.savefig('data/result/imgs/Распределение по году-месяцу включения и исключения из реестра.png')
+plt.show()
