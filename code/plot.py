@@ -1,8 +1,11 @@
 # %%
+import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv('data/result/reestr-inostrannyih-agentov-17112023.csv', dtype={'ИНН': str, 'СНИЛС': str, 'ОГРН': str})
+csv_file = sys.argv[1]
+
+df = pd.read_csv(csv_file, dtype={'ИНН': str, 'СНИЛС': str, 'ОГРН': str})
 
 date_columns = ['Дата принятия решения о включении', 'Дата принятия решения об исключении', 'Дата рождения']
 df[date_columns] = df[date_columns].apply(pd.to_datetime, format='%d.%m.%Y', errors='coerce')
@@ -45,4 +48,4 @@ for year in monthly_counts.index.year.unique()[1:]:
 
 plt.legend()
 
-plt.savefig('data/result/Распределение по году-месяцу включения и исключения из реестра_.png')
+plt.savefig('data/result/imgs/Распределение по году-месяцу включения и исключения из реестра.png')
