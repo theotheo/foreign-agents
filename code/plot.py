@@ -51,8 +51,7 @@ for year in monthly_counts.index.year.unique()[1:]:
     plt.text(bar_chart.get_xticks()[full_range.get_loc(loc)], -1, str(year), color='red', ha='center', va='center', rotation=0, fontsize=10)
 
 
-
 plt.legend()
 plt.tight_layout()
+
 plt.savefig('data/result/imgs/Распределение по году-месяцу включения и исключения из реестра.png')
-plt.show()
