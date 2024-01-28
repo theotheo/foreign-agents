@@ -10,7 +10,7 @@ for page_number in range(1, 100):
     try:
         current_df = pd.read_csv(file_name, dtype={'ИНН': str, 'СНИЛС': str, 'ОГРН': str})
         
-        current_df['Номер страницы в pdf'] = page_number
+        # current_df['Номер страницы в pdf'] = page_number
         dfs.append(current_df)
     except FileNotFoundError:
         print(f"Файл {file_name} не найден.")
