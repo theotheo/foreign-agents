@@ -1,0 +1,41 @@
+on:
+  schedule:
+    - cron: "5 */12 * * *"
+jobs:
+  scheduled:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out this repo
+      uses: actions/checkout@v2
+    - name: Try to fetch today registry
+      run: |-
+        DATE=$(date +"%d%m%Y")
+        OUTPUT_DATE=$(date +"%Y-%m-%d")
+        URL='https://minjust.gov.ru/uploaded/files/reestr-inostrannyih-agentov-'$DATE'.pdf'
+        curl --silent --fail $URL \
+          -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36' \
+          --compressed \
+          --insecure \
+          -o data/raw/$OUTPUT_DATE.pdf
+
+    - name: Parse pdf
+      run: |-
+        OUTPUT_DATE=$(date +"%Y-%m-%d")
+        python code/parse-pdf-list.py data/raw/$OUTPUT_DATE.pdf
+
+    - name: Prepare data
+      run: |-
+        python code/prepare-data.py data/interim/the-registry
+
+    - name: Plot
+      run: |-
+        python code/plot.py data/result/the-registry.csv
+
+    - name: Commit and push if it changed
+      run: |-
+        git config user.name "Automated"
+        git config user.email "actions@users.noreply.github.com"
+        git add -A data/result data/raw
+        date=$(date +"%Y.%m.%d")
+        git commit -m "data: add data for ${date}" || exit 0
+        git push
